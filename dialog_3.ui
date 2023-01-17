@@ -298,7 +298,7 @@ text-align: center;
 color: #FFFFFF;</string>
          </property>
          <property name="text">
-          <string>скачать</string>
+          <string>сохранить</string>
          </property>
         </widget>
        </item>

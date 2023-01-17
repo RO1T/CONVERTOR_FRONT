@@ -98,7 +98,7 @@ class WorkWindow(QDialog):
                 if button != QMessageBox.No:
                     self.download_fun()
             else:
-                self.conv.to_exel(self.path[0])
+                self.convertor.to_exel(self.path[0])
         elif self.name_chose == 'json':
             self.path = QFileDialog.getSaveFileName(self, f"Куда сохранить файл?", "",
                                                     "Json (*.json)")
@@ -109,7 +109,7 @@ class WorkWindow(QDialog):
                 if button != QMessageBox.No:
                     self.download_fun()
             else:
-                self.conv.to_json(self.path[0])
+                self.convertor.to_json(self.path[0])
 
     def call_error(self):
         return self.ehandler.warning_choice_msg('Ошибка', 'Вы должны выбрать куда загружать файл!')
