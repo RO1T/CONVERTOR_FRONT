@@ -114,7 +114,7 @@ border-radius: 25px;</string>
            <number>189</number>
           </property>
           <item>
-           <widget class="QPushButton" name="exel_exel_btn">
+           <widget class="QPushButton" name="excel_excel_btn">
             <property name="styleSheet">
              <string notr="true">position: absolute;
 width: 282px;
@@ -133,12 +133,12 @@ text-align: center;
 color: #FFFFFF;</string>
             </property>
             <property name="text">
-             <string>exel -&gt; exel</string>
+             <string>excel -&gt; excel</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="exel_word_btn">
+           <widget class="QPushButton" name="excel_markdown_btn">
             <property name="styleSheet">
              <string notr="true">position: absolute;
 width: 282px;
@@ -158,12 +158,13 @@ text-align: center;
 color: #FFFFFF;</string>
             </property>
             <property name="text">
-             <string>word -&gt; exel</string>
+             <string>excel -&gt; mark
+down</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="exel_json_btn">
+           <widget class="QPushButton" name="excel_json_btn">
             <property name="styleSheet">
              <string notr="true">position: absolute;
 width: 282px;
@@ -183,7 +184,7 @@ text-align: center;
 color: #FFFFFF;</string>
             </property>
             <property name="text">
-             <string>exel -&gt; json</string>
+             <string>excel -&gt; json</string>
             </property>
            </widget>
           </item>

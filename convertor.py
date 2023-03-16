@@ -4,20 +4,18 @@ import math
 from datetime import datetime, timedelta
 from openpyxl import Workbook
 from openpyxl.utils.dataframe import dataframe_to_rows
+import json
+
+
 class Convertor:
-    def __init__(self, excel_path, extension_path):
+    def __init__(self, excel_path):
         self.original = pd.read_excel(excel_path, 'исходный формат')
         self.original = self.original.fillna('')
         self.between = pd.DataFrame()
-        data = {}
-        if extension_path in [None, '']:
-            self.result = pd.read_excel(excel_path, 'нужный формат')
-        elif extension_path.split('.')[-1] =='json':
-            #with open(extension_path, 'r', encoding='utf-8') as file:  # открываем файл на чтение
-                #data = json.load(file)
-            self.result = pd.read_json(extension_path,orient="index")
-            #self.result = self.dict_to_dataframe(data, pd.DataFrame())
+        data = {} # wtf bro
+        self.result = pd.read_excel(excel_path, 'нужный формат')
         self.corr_fields = self.result.columns
+
     def dict_to_dataframe(self, items, df):
         if type(items) is dict:
             for key in items.keys():
@@ -25,17 +23,26 @@ class Convertor:
                     self.dict_to_dataframe(items[key], df)
                 else:
                     if df.__contains__(key):
-                        if np.isnan(df[key].values(len(df)-1)):
-                            df.loc[len(df)-1, key]=items[key]
+                        if np.isnan(df[key].values(len(df) - 1)):
+                            df.loc[len(df) - 1, key] = items[key]
                         else:
-                            df.loc[len(df),key] = items[key]
+                            df.loc[len(df), key] = items[key]
                     else:
                         df[key] = [items[key]]
         elif type(items) is list:
             for item in items:
                 self.dict_to_dataframe(item, df)
+
         return df
+
     def execute(self, command_data):
+        """ Выполняет переданную команду, заполняя таблицы between и result
+            args:
+                command_data (tuple(str,str,str)): исполняемая команда \n
+                1 аргумент- имя команды,\n
+                2 аргумент - текущие колонки, \n
+                3 аргумент - колонки которые должны получиться
+        """
         command = command_data[0]
         input = command_data[1]
         corr = command_data[2]
@@ -165,7 +172,11 @@ class Convertor:
             return ""
         return str(val)
 
-    def to_exel(self, path):
+    def to_excel(self, path):
+        """ Сохраняет xlsx файл с  таблицей result по указанному пути
+            args:
+                path (str): путь сохраняемого файла
+        """
         writer = pd.ExcelWriter(path,
                                 engine='openpyxl')
         self.result.to_excel(writer, 'нужный формат', index=False)
@@ -182,7 +193,37 @@ class Convertor:
         wb.save(path)
 
     def to_json(self, path):
+        """ Сохраняет json файл с  таблицей result по указанному пути
+            args:
+                path (str): путь сохраняемого файла
+        """
         res = self.result.to_json(orient="index")
         parsed = json.loads(res)
         with open(path, 'w', encoding='utf-8') as outfile:
             json.dump(parsed, outfile, indent=4, ensure_ascii=False)
+
+    def show_markdown(self):
+        """ Формирует пердставление таблицы result в формате markdown
+            :return:
+                str: сформированная markdown таблица
+        """
+        result = '| '
+        for field in self.result.columns:
+            result += f'{str(field)} |'
+        result += '\n| '
+        for i in range(len(self.result.columns)):
+            result += '--- | '
+        result += '\n| '
+        for i, row in self.result.iterrows():
+            for field in row:
+                result += f'{str(field)} |'
+            result += '\n| '
+        return result[:-2]
+
+    def to_markdown(self, path):
+        """ Сохраняет текстовый файл с markdown таблицей result по указанному пути
+            args:
+                path (str): путь сохраняемого файла
+        """
+        with open(path, "w") as file:
+            file.write(self.show_markdown())
