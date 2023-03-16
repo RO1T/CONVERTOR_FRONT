@@ -18,8 +18,6 @@ class Convertor:
             self.result = pd.read_json(extension_path,orient="index")
             #self.result = self.dict_to_dataframe(data, pd.DataFrame())
         self.corr_fields = self.result.columns
-
-
     def dict_to_dataframe(self, items, df):
         if type(items) is dict:
             for key in items.keys():
@@ -36,7 +34,6 @@ class Convertor:
         elif type(items) is list:
             for item in items:
                 self.dict_to_dataframe(item, df)
-
         return df
     def execute(self, command_data):
         command = command_data[0]
