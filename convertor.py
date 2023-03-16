@@ -207,35 +207,35 @@ class Convertor:
             :return:
                 str: сформированная markdown таблица
         """
-        N = 3
-        shorted_res = self.result.iloc[:, 0:N]
-
-        str_result = '| '
-        for field in shorted_res:
-            str_result += f'{str(field)} |'
-        str_result += '\n| '
-        for i in range(len(shorted_res)):
-            str_result += '--- | '
-        str_result += '\n| '
-        for i, row in shorted_res.iterrows():
-            for field in row:
-                str_result += f'{str(field)} |'
-            str_result += '\n| '
-        return str_result[:-2]
+        # N = 3
+        # shorted_res = self.result.iloc[:, 0:N]
+        #
+        # str_result = '| '
+        # for field in shorted_res:
+        #     str_result += f'{str(field)} |'
+        # str_result += '\n| '
+        # for i in range(len(shorted_res)):
+        #     str_result += '--- | '
+        # str_result += '\n| '
+        # for i, row in shorted_res.iterrows():
+        #     for field in row:
+        #         str_result += f'{str(field)} |'
+        #     str_result += '\n| '
+        # return str_result[:-2]
 
         # for all
-        # result = '| '
-        # for field in self.result.columns:
-        #     result += f'{str(field)} |'
-        # result += '\n| '
-        # for i in range(len(self.result.columns)):
-        #     result += '--- | '
-        # result += '\n| '
-        # for i, row in self.result.iterrows():
-        #     for field in row:
-        #         result += f'{str(field)} |'
-        #     result += '\n| '
-        # return result[:-2]
+        result = '| '
+        for field in self.result.columns:
+            result += f'{str(field)} |'
+        result += '\n| '
+        for i in range(len(self.result.columns)):
+            result += '--- | '
+        result += '\n| '
+        for i, row in self.result.iterrows():
+            for field in row:
+                result += f'{str(field)} |'
+            result += '\n| '
+        return result[:-2]
 
     def to_markdown(self, path):
         """ Сохраняет текстовый файл с markdown таблицей result по указанному пути

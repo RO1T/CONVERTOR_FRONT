@@ -64,15 +64,19 @@ class WorkWindow(QDialog):
         self.name_chose = name_chose
         self.file_path = file_path
         self.ehandler = ExcpetionHandler()
-
-        uic.loadUi('dialog_3.ui', self)
+        if self.name_chose == 'markdown':
+            uic.loadUi('dialog_3_md.ui', self)
+            self.current_state = self.label_current
+        else:
+            uic.loadUi('dialog_3.ui', self)
+            self.current_state = ''
         QFontDatabase.addApplicationFont("font/Gilroy-Regular.ttf")
         # данные с екселя
         self.convertor = Convertor(self.file_path)
         df_input = self.convertor.original
         df_result = self.convertor.result
         # кнопки
-        self.current_state = self.label_current
+
         self.original_clear.clicked.connect(self.clear_orig)
         self.result_clear.clicked.connect(self.clear_res)
         self.apply_btn.clicked.connect(self.apply_changes)
@@ -166,7 +170,6 @@ class WorkWindow(QDialog):
         else:
             self.apply()
 
-
     def apply(self):
         try:
             command = self.get_command()
@@ -177,7 +180,8 @@ class WorkWindow(QDialog):
         finally:
             self.clear_res()
             self.clear_orig()
-            self.current_state.setText(self.convertor.show_markdown())
+            if self.name_chose == 'markdown':
+                self.current_state.setText(self.convertor.show_markdown())
 
     def get_command(self):
         return self.command.currentText(), self.original.text()[:-2].split(', '), self.result.text()[:-2].split(', ')
@@ -191,6 +195,7 @@ class WorkWindow(QDialog):
             self.empty_column_warning_no_yes('У вас остались незаполненные колонки, уверены, что хотите продолжить?')
         else:
             self.download_fun()
+
 
 class MainWindow(QDialog):
     def __init__(self):
@@ -256,15 +261,16 @@ if __name__ == "__main__":
     main_w = MainWindow()
     widgets.addWidget(main_w)
 
-    widgets.setGeometry(main_w.geometry())
-
     widgets.setWindowTitle('Конвертор')
     widgets.setWindowIcon(QIcon('logo.png'))
-    # widgets.setMaximumSize(1160, 591)
-    qtRectangle = widgets.frameGeometry()
-    centerPoint = QDesktopWidget().availableGeometry().center()
-    qtRectangle.moveCenter(centerPoint)
-    widgets.move(qtRectangle.topLeft())
+
+    widgets.setGeometry(QDesktopWidget().screenGeometry(-1))
+    # qtRectangle = widgets.frameGeometry()
+    # centerPoint = QDesktopWidget().availableGeometry().center()
+    # qtRectangle.moveCenter(centerPoint)
+    # widgets.move(qtRectangle.topLeft())
+
+
 
     widgets.show()
 

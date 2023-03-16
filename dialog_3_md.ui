@@ -13,7 +13,7 @@
     <x>0</x>
     <y>0</y>
     <width>1160</width>
-    <height>519</height>
+    <height>521</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -187,7 +187,7 @@ border-radius: 15px;</string>
     </layout>
    </item>
    <item>
-    <layout class="QVBoxLayout" name="verticalLayout_5" stretch="5,1">
+    <layout class="QVBoxLayout" name="verticalLayout_5" stretch="8,4,1">
      <item>
       <layout class="QGridLayout" name="gridLayout">
        <item row="0" column="0">
@@ -234,7 +234,66 @@ color: #000000;</string>
            <string>Итоговая таблица</string>
           </property>
          </widget>
-         <widget class="QTableView" name="table_after"/>
+         <widget class="QTableView" name="table_after">
+          <property name="dragDropMode">
+           <enum>QAbstractItemView::DragOnly</enum>
+          </property>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_6" stretch="1,5">
+       <item>
+        <widget class="QLabel" name="label_upper">
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb();
+font-family: 'Gilroy';
+font-style: normal;
+font-weight: 400;
+font-size: 19px;
+line-height: 23px;
+
+color: #000000;</string>
+         </property>
+         <property name="text">
+          <string>Markdown</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_current">
+         <property name="styleSheet">
+          <string notr="true">background: #F1F1F1;
+font-family: 'Gilroy';
+font-style: normal;
+font-weight: 400;
+font-size: 15px;
+line-height: 23px;
+vertical-align: top;
+text-align: left;
+color: #000000;
+</string>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::Box</enum>
+         </property>
+         <property name="text">
+          <string>I just love **bold text**.</string>
+         </property>
+         <property name="textFormat">
+          <enum>Qt::PlainText</enum>
+         </property>
+         <property name="scaledContents">
+          <bool>false</bool>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+         </property>
+         <property name="textInteractionFlags">
+          <set>Qt::TextSelectableByMouse</set>
+         </property>
         </widget>
        </item>
       </layout>
