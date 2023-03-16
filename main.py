@@ -72,6 +72,7 @@ class WorkWindow(QDialog):
         df_input = self.convertor.original
         df_result = self.convertor.result
         # кнопки
+        self.current_state = self.label_current
         self.original_clear.clicked.connect(self.clear_orig)
         self.result_clear.clicked.connect(self.clear_res)
         self.apply_btn.clicked.connect(self.apply_changes)
@@ -165,6 +166,7 @@ class WorkWindow(QDialog):
         else:
             self.apply()
 
+
     def apply(self):
         try:
             command = self.get_command()
@@ -175,6 +177,7 @@ class WorkWindow(QDialog):
         finally:
             self.clear_res()
             self.clear_orig()
+            self.current_state.setText(self.convertor.show_markdown())
 
     def get_command(self):
         return self.command.currentText(), self.original.text()[:-2].split(', '), self.result.text()[:-2].split(', ')
