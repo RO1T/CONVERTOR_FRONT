@@ -17,6 +17,7 @@ class TableModel(QAbstractTableModel):
     def __init__(self, data):
         super(TableModel, self).__init__()
         self._data = data
+        self.empty_cells = ''
 
     def load_data(self, data):
         self.beginResetModel()
@@ -28,7 +29,10 @@ class TableModel(QAbstractTableModel):
             value = self._data.iloc[index.row(), index.column()]
             if isinstance(value, datetime):
                 # Render time to YYY-MM-DD.
-                return value.strftime("%Y-%m-%d")
+                try:
+                    return value.strftime("%Y-%m-%d")
+                except:
+                    return self.empty_cells
             if isinstance(value, int):
                 # Render time to YYY-MM-DD.
                 return str(value)
@@ -117,12 +121,11 @@ class WorkWindow(QDialog):
             elif self.name_chose == 'json':
 
                 if self.comboJson.currentText() == '[{},  {}] (default)':
-                    self.convertor.to_json_default(self.path[0])
+                    self.convertor.to_json(self.path[0], 'records')
                 elif self.comboJson.currentText() == '["0" : {}, "1" : {}]':
-                    self.convertor.to_json_index(self.path[0])
+                    self.convertor.to_json(self.path[0], 'index')
             elif self.name_chose == 'markdown':
                 self.convertor.to_markdown(self.path[0])
-
 
     def call_error(self):
         return self.ehandler.warning_choice_msg('Ошибка', 'Вы должны выбрать куда загружать файл!')
@@ -156,14 +159,18 @@ class WorkWindow(QDialog):
 
     def apply_changes(self):
         command = self.get_command()
-        no_split = command[0] == 'Разъединить' and (len(command[1]) > 1 or len(command[2]) == 1)
-        no_rename = command[0] == 'Переименовать' and (len(command[1]) > 1 or len(command[2]) > 1)
-        no_zip = command[0] == 'Объединить' and (len(command[1]) == 1 or len(command[2]) > 1)
+        no_split = command[0] == 'Разъединить' and (len(command[1]) != 1 or len(command[2]) < 2)
+        no_rename = command[0] == 'Переименовать' and (
+                    len(command[1]) != 1 or len(command[2]) != 1 or command[1][0] == '' or command[2][0] == '')
+        no_zip = command[0] == 'Объединить' and (len(command[1]) < 2 or len(command[2]) != 1)
         change_filled = False
         for column in command[2]:
             if column in self.convertor.between.columns:
                 change_filled = True
-        if command[0] == 'Выберите':
+        if (command[0] == 'Выберите' or no_zip or no_rename or no_split) and (
+                self.combo_empty_cells.currentText() != self.convertor.empty_cells or self.comboJson.currentText() != self.convertor.json_format):
+            self.apply(False)
+        elif command[0] == 'Выберите':
             self.not_implemented_alert('Вы ничего не сделали!')
         elif no_rename:
             self.not_implemented_alert(
@@ -178,11 +185,17 @@ class WorkWindow(QDialog):
         else:
             self.apply()
 
-    def apply(self):
+    def apply(self, command_is_empty=True):
         try:
-            command = self.get_command()
-            self.convertor.execute(command)
+            empty_cells = self.combo_empty_cells.currentText()
+            if command_is_empty:
+                command = self.get_command()
+                self.convertor.execute(command)
+            if empty_cells != self.convertor.empty_cells:
+                self.convertor.empty_cells = empty_cells if empty_cells != 'Пустая строка' else ''
+                self.convertor.refill_empty_cells()
             self.model_result.load_data(self.convertor.result)
+
         except:
             self.not_implemented_alert('Данную функцию нельзя выполнить')
         finally:
@@ -190,6 +203,12 @@ class WorkWindow(QDialog):
             self.clear_orig()
             if self.name_chose == 'markdown':
                 self.current_state.setText(self.convertor.show_markdown())
+                ##################### !!!!!!!!!!!!!!!!!! поменять на словарь какой-нибдуь
+            elif self.name_chose == 'json':
+                if self.comboJson.currentText() == '[{},  {}] (default)':
+                    self.current_state.setText(self.convertor.show_json('records'))
+                if self.comboJson.currentText() == '["0" : {}, "1" : {}]':
+                    self.current_state.setText(self.convertor.show_json('index'))
 
     def get_command(self):
         return self.command.currentText(), self.original.text()[:-2].split(', '), self.result.text()[:-2].split(', ')
@@ -277,8 +296,6 @@ if __name__ == "__main__":
     # centerPoint = QDesktopWidget().availableGeometry().center()
     # qtRectangle.moveCenter(centerPoint)
     # widgets.move(qtRectangle.topLeft())
-
-
 
     widgets.show()
 

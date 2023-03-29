@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 from openpyxl import Workbook
 from openpyxl.utils.dataframe import dataframe_to_rows
 import json
+import re
 
 
 class Convertor:
@@ -13,9 +14,10 @@ class Convertor:
         self.original = pd.read_excel(excel_path, 'исходный формат')
         self.original = self.original.fillna('')
         self.between = pd.DataFrame()
-        data = {} # wtf bro
+        data = {}  # wtf bro
         self.result = pd.read_excel(excel_path, 'нужный формат')
         self.corr_fields = self.result.columns
+        self.json_format = 'records'
 
     def dict_to_dataframe(self, items, df):
         if type(items) is dict:
@@ -55,7 +57,7 @@ class Convertor:
 
         for i in range(len(corr_columns[0]), self.original.shape[0]):
             for column in corr_columns:
-                column.append(' ')
+                column.append(self.empty_cells)
 
         for i in range(len(corr)):
             self.between[corr[i]] = corr_columns[i]
@@ -73,7 +75,7 @@ class Convertor:
             elif self.original.__contains__(field):
                 result[field] = self.original[field]
             else:
-                result[field] = [' ' for i in range(self.original.shape[0])]
+                result[field] = [self.empty_cells for i in range(self.original.shape[0])]
         self.result = result
 
     def fix_date(self):
@@ -108,10 +110,12 @@ class Convertor:
         for value in values:
             # проверка на длину
             if value == '':
-                continue
-            splitted_row = value.split(splitter)
-            for i in range(length):
-                result[i].append(splitted_row[i])
+                for i in range(length):
+                    result[i].append(self.empty_cells)
+            else:
+                splitted_row = value.split(splitter)
+                for i in range(length):
+                    result[i].append(splitted_row[i])
         return result
 
     def split_date(self, columns):
@@ -193,19 +197,27 @@ class Convertor:
             ws.column_dimensions[column[0].column_letter].width = length + 2
         wb.save(path)
 
-    def refill_empty_cells(self, text):
-        pass
-    def to_json_index(self, path):
-        pass
+    def refill_empty_cells(self):
+        empty = ['', ' ', 'None', 'Nan', 'Null']
+        for field in self.corr_fields:
+            for index in self.result.index:
+                if empty.__contains__(self.result.loc[index,field]):
+                    self.result.loc[index,field] = self.empty_cells
 
-    def show_json(self):
-        pass
-    def to_json_default(self, path):
+    def show_json(self, orient):
+        self.json_format = orient
+        replace = ['[', ']', '{', '}', ',']
+        output = self.result.to_json(orient=orient, force_ascii=False)
+        for rep in replace:
+            output = output.replace(rep, rep + '\n')
+        return output
+
+    def to_json(self, path, orient):
         """ Сохраняет json файл с  таблицей result по указанному пути
             args:
                 path (str): путь сохраняемого файла
         """
-        res = self.result.to_json(orient="index")
+        res = self.result.to_json(orient=orient, force_ascii=False)
         parsed = json.loads(res)
         with open(path, 'w', encoding='utf-8') as outfile:
             json.dump(parsed, outfile, indent=4, ensure_ascii=False)
