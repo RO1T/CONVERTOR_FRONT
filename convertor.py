@@ -9,6 +9,7 @@ import json
 
 class Convertor:
     def __init__(self, excel_path):
+        self.empty_cells = ''
         self.original = pd.read_excel(excel_path, 'исходный формат')
         self.original = self.original.fillna('')
         self.between = pd.DataFrame()
@@ -85,11 +86,11 @@ class Convertor:
                 self.result[key] = list
 
     def get_func(self, command):
-        if command == "SPLIT":
+        if command == "Разъединить":
             return self.split_column
-        elif command == "ZIP":
+        elif command == "Объединить":
             return self.zip_columns
-        elif command == "RENAME":
+        elif command == "Переименовать":
             return self.rename
         else:  # command == "RENAME":
             return self.empty_method
@@ -192,7 +193,14 @@ class Convertor:
             ws.column_dimensions[column[0].column_letter].width = length + 2
         wb.save(path)
 
-    def to_json(self, path):
+    def refill_empty_cells(self, text):
+        pass
+    def to_json_index(self, path):
+        pass
+
+    def show_json(self):
+        pass
+    def to_json_default(self, path):
         """ Сохраняет json файл с  таблицей result по указанному пути
             args:
                 path (str): путь сохраняемого файла
@@ -207,6 +215,7 @@ class Convertor:
             :return:
                 str: сформированная markdown таблица
         """
+        # если надо ток N столбца
         # N = 3
         # shorted_res = self.result.iloc[:, 0:N]
         #

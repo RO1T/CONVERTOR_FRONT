@@ -67,7 +67,10 @@ class WorkWindow(QDialog):
         if self.name_chose == 'markdown':
             uic.loadUi('dialog_3_md.ui', self)
             self.current_state = self.label_current
-        else:
+        elif self.name_chose == 'json':
+            uic.loadUi('dialog_3_js.ui', self)
+            self.current_state = self.label_current
+        elif self.name_chose == 'excel':
             uic.loadUi('dialog_3.ui', self)
             self.current_state = ''
         QFontDatabase.addApplicationFont("font/Gilroy-Regular.ttf")
@@ -112,9 +115,14 @@ class WorkWindow(QDialog):
             if self.name_chose == 'excel':
                 self.convertor.to_excel(self.path[0])
             elif self.name_chose == 'json':
-                self.convertor.to_json(self.path[0])
+
+                if self.comboJson.currentText() == '[{},  {}] (default)':
+                    self.convertor.to_json_default(self.path[0])
+                elif self.comboJson.currentText() == '["0" : {}, "1" : {}]':
+                    self.convertor.to_json_index(self.path[0])
             elif self.name_chose == 'markdown':
                 self.convertor.to_markdown(self.path[0])
+
 
     def call_error(self):
         return self.ehandler.warning_choice_msg('Ошибка', 'Вы должны выбрать куда загружать файл!')
@@ -148,18 +156,18 @@ class WorkWindow(QDialog):
 
     def apply_changes(self):
         command = self.get_command()
-        no_split = command[0] == 'SPLIT' and (len(command[1]) > 1 or len(command[2]) == 1)
-        no_rename = command[0] == 'RENAME' and (len(command[1]) > 1 or len(command[2]) > 1)
-        no_zip = command[0] == 'ZIP' and (len(command[1]) == 1 or len(command[2]) > 1)
+        no_split = command[0] == 'Разъединить' and (len(command[1]) > 1 or len(command[2]) == 1)
+        no_rename = command[0] == 'Переименовать' and (len(command[1]) > 1 or len(command[2]) > 1)
+        no_zip = command[0] == 'Объединить' and (len(command[1]) == 1 or len(command[2]) > 1)
         change_filled = False
         for column in command[2]:
             if column in self.convertor.between.columns:
                 change_filled = True
-        if command[0] == '':
+        if command[0] == 'Выберите':
             self.not_implemented_alert('Вы ничего не сделали!')
         elif no_rename:
             self.not_implemented_alert(
-                'Для выполнения команды RENAME в каждой таблице выберите только по одному столбцу!')
+                'Для выполнения команды Переименовать в каждой таблице выберите только по одному столбцу!')
         elif no_split:
             self.not_implemented_alert('Для выполнения команды SPLIT в  исходной таблице выберите только один стобец!')
         elif no_zip:
