@@ -99,17 +99,17 @@ color: #000000;</string>
          </item>
          <item>
           <property name="text">
-           <string>SPLIT</string>
+           <string>Разъединить</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string>RENAME</string>
+           <string>Переименовать</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string>ZIP</string>
+           <string>Объединить</string>
           </property>
          </item>
         </widget>

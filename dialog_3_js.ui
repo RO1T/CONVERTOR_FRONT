@@ -13,7 +13,7 @@
     <x>0</x>
     <y>0</y>
     <width>1087</width>
-    <height>546</height>
+    <height>775</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -211,7 +211,7 @@ border-radius: 13px;</string>
       </layout>
      </item>
      <item>
-      <layout class="QVBoxLayout" name="verticalLayout_4" stretch="0,1">
+      <layout class="QVBoxLayout" name="verticalLayout_4" stretch="0,1,0,0,0,0">
        <item>
         <widget class="QLabel" name="label_6">
          <property name="maximumSize">
@@ -268,20 +268,18 @@ color: #000000;</string>
          </item>
         </widget>
        </item>
-      </layout>
-     </item>
-     <item>
-      <layout class="QVBoxLayout" name="verticalLayout_7" stretch="0,1">
        <item>
-        <widget class="QLabel" name="label_8">
-         <property name="maximumSize">
-          <size>
-           <width>150</width>
-           <height>30</height>
-          </size>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">
+        <layout class="QVBoxLayout" name="verticalLayout_7" stretch="0,0,0">
+         <item>
+          <widget class="QLabel" name="label_8">
+           <property name="maximumSize">
+            <size>
+             <width>150</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">
 background-color: rgb();
 font-family: 'Gilroy';
 font-style: normal;
@@ -290,57 +288,87 @@ font-size: 15px;
 line-height: 23px;
 
 color: #000000;</string>
-         </property>
+           </property>
+           <property name="text">
+            <string>Вид пустых ячеек</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="combo_empty_cells">
+           <property name="maximumSize">
+            <size>
+             <width>150</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true"/>
+           </property>
+           <property name="editable">
+            <bool>false</bool>
+           </property>
+           <property name="currentText">
+            <string extracomment="sio">Пустая строка</string>
+           </property>
+           <property name="maxVisibleItems">
+            <number>5</number>
+           </property>
+           <item>
+            <property name="text">
+             <string>Пустая строка</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Пробел</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Null</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Nan</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>None</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_9">
+           <property name="text">
+            <string>Логические параметры</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="true_box">
          <property name="text">
-          <string>Вид пустых ячеек</string>
+          <string>true/false</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QComboBox" name="combo_empty_cells">
-         <property name="maximumSize">
-          <size>
-           <width>150</width>
-           <height>30</height>
-          </size>
+        <widget class="QCheckBox" name="y_box">
+         <property name="text">
+          <string>Y/N</string>
          </property>
-         <property name="styleSheet">
-          <string notr="true"/>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="digit_box">
+         <property name="text">
+          <string>1/0</string>
          </property>
-         <property name="editable">
-          <bool>false</bool>
-         </property>
-         <property name="currentText">
-          <string extracomment="sio">Пустая строка</string>
-         </property>
-         <property name="maxVisibleItems">
-          <number>5</number>
-         </property>
-         <item>
-          <property name="text">
-           <string>Пустая строка</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Пробел</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Null</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Nan</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>None</string>
-          </property>
-         </item>
         </widget>
        </item>
       </layout>

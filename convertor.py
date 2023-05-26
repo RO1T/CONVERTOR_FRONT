@@ -201,23 +201,37 @@ class Convertor:
         empty = ['', ' ', 'None', 'Nan', 'Null']
         for field in self.corr_fields:
             for index in self.result.index:
-                if empty.__contains__(self.result.loc[index,field]):
-                    self.result.loc[index,field] = self.empty_cells
+                if empty.__contains__(self.result.loc[index, field]):
+                    self.result.loc[index, field] = self.empty_cells
 
-    def show_json(self, orient):
+    def show_json(self, orient,bools):
         self.json_format = orient
-        replace = ['[', ']', '{', '}', ',']
-        output = self.result.to_json(orient=orient, force_ascii=False)
-        for rep in replace:
-            output = output.replace(rep, rep + '\n')
-        return output
+        replace = {'"null"': 'null', '"Null:': 'null', '[': '[\n', ']': ']\n', '{': '{\n', '}': '}\n', ',': ',\n'}
+        replace_bool={'"true"': 'true', '"false"': 'false', '"y"': 'true', '"n"': 'false', '"1"': 'true', '"0"': 'false'}
+        res = self.result.to_json(orient=orient, force_ascii=False)
+        for key in replace.keys():
+            res = res.replace(key, replace[key])
+        for key in bools:
+            if bools[key]:
+                res = res.replace(key, replace_bool[key])
+        return res
 
-    def to_json(self, path, orient):
+    def to_json(self, path, orient,bools):
         """ Сохраняет json файл с  таблицей result по указанному пути
             args:
                 path (str): путь сохраняемого файла
+                !!!!!!!!!!!!!!!!!!!!!
         """
+        replace = {'"true"': 'true', '"false"': 'false', '"Y"': 'true', '"N"': 'false', '1': 'true', '0': 'false',
+                   '"null"': 'null', '"Null:': 'null'}
+        replace_bool = {'"true"': 'true', '"false"': 'false', '"y"': 'true', '"n"': 'false', '"1"': 'true',
+                        '"0"': 'false'}
         res = self.result.to_json(orient=orient, force_ascii=False)
+        for key in replace.keys():
+            res = res.replace(key, replace[key])
+        for key in bools:
+            if bools[key]:
+                res = res.replace(key, replace_bool[key])
         parsed = json.loads(res)
         with open(path, 'w', encoding='utf-8') as outfile:
             json.dump(parsed, outfile, indent=4, ensure_ascii=False)

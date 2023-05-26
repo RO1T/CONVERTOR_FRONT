@@ -119,11 +119,13 @@ class WorkWindow(QDialog):
             if self.name_chose == 'excel':
                 self.convertor.to_excel(self.path[0])
             elif self.name_chose == 'json':
-
+                bools = {'"true"': self.true_box.isChecked(), '"false"': self.true_box.isChecked(),
+                         '"y"': self.y_box.isChecked(), '"n"': self.y_box.isChecked(), '1': self.digit_box.isChecked(),
+                         '0': self.digit_box.isChecked()}
                 if self.comboJson.currentText() == '[{},  {}] (default)':
-                    self.convertor.to_json(self.path[0], 'records')
+                    self.convertor.to_json(self.path[0], 'records', bools)
                 elif self.comboJson.currentText() == '["0" : {}, "1" : {}]':
-                    self.convertor.to_json(self.path[0], 'index')
+                    self.convertor.to_json(self.path[0], 'index', bools)
             elif self.name_chose == 'markdown':
                 self.convertor.to_markdown(self.path[0])
 
@@ -161,7 +163,7 @@ class WorkWindow(QDialog):
         command = self.get_command()
         no_split = command[0] == 'Разъединить' and (len(command[1]) != 1 or len(command[2]) < 2)
         no_rename = command[0] == 'Переименовать' and (
-                    len(command[1]) != 1 or len(command[2]) != 1 or command[1][0] == '' or command[2][0] == '')
+                len(command[1]) != 1 or len(command[2]) != 1 or command[1][0] == '' or command[2][0] == '')
         no_zip = command[0] == 'Объединить' and (len(command[1]) < 2 or len(command[2]) != 1)
         change_filled = False
         for column in command[2]:
@@ -205,10 +207,14 @@ class WorkWindow(QDialog):
                 self.current_state.setText(self.convertor.show_markdown())
                 ##################### !!!!!!!!!!!!!!!!!! поменять на словарь какой-нибдуь
             elif self.name_chose == 'json':
+
+                bools = {'"true"': self.true_box.isChecked(), '"false"': self.true_box.isChecked(),
+                         '"y"': self.y_box.isChecked(), '"n"': self.y_box.isChecked(), '1': self.digit_box.isChecked(),
+                         '0': self.digit_box.isChecked()}
                 if self.comboJson.currentText() == '[{},  {}] (default)':
-                    self.current_state.setText(self.convertor.show_json('records'))
+                    self.current_state.setText(self.convertor.show_json('records', bools))
                 if self.comboJson.currentText() == '["0" : {}, "1" : {}]':
-                    self.current_state.setText(self.convertor.show_json('index'))
+                    self.current_state.setText(self.convertor.show_json('index', bools))
 
     def get_command(self):
         return self.command.currentText(), self.original.text()[:-2].split(', '), self.result.text()[:-2].split(', ')
