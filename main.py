@@ -188,12 +188,16 @@ class WorkWindow(QDialog):
             self.apply()
 
     def apply(self, command_is_empty=True):
+        empty_cells ="None"
         try:
             empty_cells = self.combo_empty_cells.currentText()
+        except:
+            empty_cells = "None"
+        try:
             if command_is_empty:
                 command = self.get_command()
                 self.convertor.execute(command)
-            if empty_cells != self.convertor.empty_cells:
+            if empty_cells != self.convertor.empty_cells and empty_cells != "None":
                 self.convertor.empty_cells = empty_cells if empty_cells != 'Пустая строка' else ''
                 self.convertor.refill_empty_cells()
             self.model_result.load_data(self.convertor.result)
